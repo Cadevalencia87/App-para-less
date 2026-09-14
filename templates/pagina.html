@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ p.titulo }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#191C1F;--ink-soft:#5A6068;--ink-faint:#8B9199;--paper:#FFFFFF;
+  --desk:#EDEFF1;--tint:#F5F7F8;--rule:#D9DDE1;--inst:#1B4A72;--inst-soft:#E7EEF5;
+  --ok:#2F7D4F;--alert:#A8342C;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--desk);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:16px;line-height:1.6;padding:28px 16px 64px}
+.sheet{max-width:680px;margin:0 auto;background:var(--paper);border:1px solid var(--rule);border-top:4px solid var(--inst);padding:40px 44px 36px}
+.folio{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft);border-bottom:1px solid var(--rule);padding-bottom:14px;margin-bottom:22px}
+h1{font-size:27px;line-height:1.25;font-weight:600;margin:0 0 8px;letter-spacing:-.015em}
+.sub{font-size:15.5px;color:var(--ink-soft);margin:0 0 22px}
+img.hero{width:100%;height:auto;display:block;border:1px solid var(--rule);margin:0 0 22px}
+.contenido{font-size:15.5px;color:var(--ink);white-space:pre-line;margin:0 0 26px}
+.actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--rule);padding-top:22px}
+button{font-family:inherit;font-size:15px;font-weight:500;padding:13px 24px;cursor:pointer;background:var(--inst);color:#fff;border:1px solid var(--inst)}
+button:hover{background:#15395a}
+button.ghost{background:var(--paper);color:var(--inst)}
+button.ghost:hover{background:var(--inst-soft)}
+button:disabled{opacity:.6;cursor:default}
+.err{color:var(--alert);font-size:14px;margin-top:8px}
+#recibo{display:none;margin-top:22px;border:1px solid var(--ok);background:#F1F8F3;padding:18px 20px}
+#recibo p{margin:0;font-size:15px;color:#2E4A3A}
+@media (max-width:620px){
+  body{padding:0 0 40px}
+  .sheet{padding:28px 20px 30px;border-left:0;border-right:0}
+  h1{font-size:22px}
+}
+</style>
+</head>
+<body>
+<main class="sheet">
+  <div class="folio">Folio interno · {{ p.creado_en }}</div>
+  <h1>{{ p.titulo }}</h1>
+  {% if p.subtitulo %}<p class="sub">{{ p.subtitulo }}</p>{% endif %}
+  {% if p.imagen_url %}<img class="hero" src="{{ p.imagen_url }}" alt="">{% endif %}
+  {% if p.contenido %}<p class="contenido">{{ p.contenido }}</p>{% endif %}
+
+  {% if p.tipo == 'confirmacion' %}
+  <div class="actions" id="botones">
+    <button type="button" id="btnSi">{{ p.texto_boton_si }}</button>
+    <button type="button" class="ghost" id="btnNo">{{ p.texto_boton_no }}</button>
+  </div>
+  <p class="err" id="err"></p>
+  <div id="recibo"><p id="mensajeRecibo"></p></div>
+
+  <script>
+  var enviando=false;
+  function enviarRespuesta(respuesta){
+    if(enviando) return;
+    enviando=true;
+    var err=document.getElementById('err');
+    err.textContent='';
+    fetch('/api/confirmar/{{ p.id }}',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({respuesta:respuesta})
+    })
+    .then(function(res){return res.json().then(function(data){return {ok:res.ok,data:data};});})
+    .then(function(r){
+      enviando=false;
+      if(!r.ok||!r.data.ok){
+        err.textContent=(r.data&&r.data.error)||'No se pudo enviar. Intente de nuevo.';
+        return;
+      }
+      document.getElementById('botones').style.display='none';
+      document.getElementById('mensajeRecibo').textContent=r.data.mensaje;
+      document.getElementById('recibo').style.display='block';
+    })
+    .catch(function(){
+      enviando=false;
+      err.textContent='No se pudo conectar con el servidor. Intente de nuevo.';
+    });
+  }
+  document.getElementById('btnSi').addEventListener('click',function(){enviarRespuesta('confirmado');});
+  document.getElementById('btnNo').addEventListener('click',function(){enviarRespuesta('declinado');});
+  </script>
+  {% endif %}
+</main>
+</body>
+</html>

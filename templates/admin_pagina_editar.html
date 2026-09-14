@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ 'Editar página' if pagina else 'Crear página' }}</title>
+<style>
+:root{--ink:#191C1F;--ink-soft:#5A6068;--paper:#FFFFFF;--desk:#EDEFF1;--rule:#D9DDE1;--inst:#1B4A72;--tint:#F5F7F8;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--desk);color:var(--ink);font-family:system-ui,sans-serif;padding:28px 16px 60px}
+.wrap{max-width:640px;margin:0 auto}
+h1{font-size:20px;margin:0 0 18px}
+a.link{color:var(--inst);text-decoration:none;font-size:13px}
+form{background:var(--paper);border:1px solid var(--rule);padding:22px 24px}
+label{display:block;font-size:13.5px;font-weight:600;margin:16px 0 6px}
+label:first-of-type{margin-top:0}
+.hint{font-size:12.5px;color:var(--ink-soft);margin:2px 0 0}
+input[type=text],input[type=url],textarea,select{
+  width:100%;font-family:inherit;font-size:14.5px;color:var(--ink);
+  border:1px solid var(--rule);padding:9px 10px;background:var(--paper);
+}
+textarea{min-height:120px;resize:vertical;line-height:1.6}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tipo-extra{border-top:1px dashed var(--rule);margin-top:18px;padding-top:4px;display:none}
+.tipo-extra.on{display:block}
+.actions{margin-top:22px;display:flex;gap:10px;align-items:center}
+button{background:var(--inst);color:#fff;border:1px solid var(--inst);padding:11px 20px;font-size:14.5px;cursor:pointer;font-family:inherit}
+img.preview{max-width:100%;margin-top:8px;border:1px solid var(--rule);display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p><a class="link" href="/admin/paginas">&larr; Volver a páginas</a></p>
+  <h1>{{ 'Editar página' if pagina else 'Crear página nueva' }}</h1>
+
+  <form method="post" action="{{ '/admin/paginas/%d/actualizar' % pagina.id if pagina else '/admin/paginas/crear' }}">
+
+    <label for="titulo">Título</label>
+    <input type="text" id="titulo" name="titulo" required value="{{ pagina.titulo if pagina else '' }}" placeholder="Ej. Confirmación de cita">
+
+    <label for="slug">Dirección del link (se genera sola si la dejas vacía)</label>
+    <input type="text" id="slug" name="slug" value="{{ pagina.slug if pagina else '' }}" placeholder="Ej. confirmacion-cita">
+    <p class="hint">Quedará como tudominio.onrender.com/p/{{ pagina.slug if pagina else 'lo-que-pongas-aqui' }}</p>
+
+    <label for="subtitulo">Subtítulo (opcional)</label>
+    <input type="text" id="subtitulo" name="subtitulo" value="{{ pagina.subtitulo if pagina else '' }}" placeholder="Una línea corta debajo del título">
+
+    <label for="contenido">Contenido</label>
+    <textarea id="contenido" name="contenido" placeholder="Escribe el texto de la página. Deja una línea en blanco para separar párrafos.">{{ pagina.contenido if pagina else '' }}</textarea>
+
+    <label for="imagen_url">Link de una imagen (opcional)</label>
+    <input type="url" id="imagen_url" name="imagen_url" value="{{ pagina.imagen_url if pagina else '' }}" placeholder="https://i.imgur.com/tu-imagen.jpg">
+    <p class="hint">Sube tu imagen a imgur.com (o similar), copia el link directo y pégalo aquí.</p>
+    <img class="preview" id="preview" alt="">
+
+    <label for="tipo">Tipo de página</label>
+    <select id="tipo" name="tipo">
+      <option value="simple" {{ 'selected' if pagina and pagina.tipo == 'simple' else '' }}>Solo informativa (sin botones)</option>
+      <option value="confirmacion" {{ 'selected' if pagina and pagina.tipo == 'confirmacion' else '' }}>Con botones de confirmar / no puedo</option>
+    </select>
+
+    <div class="tipo-extra" id="extraConfirmacion">
+      <div class="row">
+        <div>
+          <label for="texto_boton_si">Texto del botón de confirmar</label>
+          <input type="text" id="texto_boton_si" name="texto_boton_si" value="{{ pagina.texto_boton_si if pagina else 'Confirmar' }}">
+        </div>
+        <div>
+          <label for="texto_boton_no">Texto del botón de rechazar</label>
+          <input type="text" id="texto_boton_no" name="texto_boton_no" value="{{ pagina.texto_boton_no if pagina else 'No puedo' }}">
+        </div>
+      </div>
+      <label for="mensaje_confirmado">Mensaje al confirmar</label>
+      <textarea id="mensaje_confirmado" name="mensaje_confirmado" style="min-height:70px">{{ pagina.mensaje_confirmado if pagina else 'Gracias por confirmar.' }}</textarea>
+      <label for="mensaje_declinado">Mensaje al rechazar</label>
+      <textarea id="mensaje_declinado" name="mensaje_declinado" style="min-height:70px">{{ pagina.mensaje_declinado if pagina else 'Quedó registrado, gracias por avisar.' }}</textarea>
+    </div>
+
+    <div class="actions">
+      <button type="submit">{{ 'Guardar cambios' if pagina else 'Crear página' }}</button>
+      {% if pagina %}<a class="link" href="/p/{{ pagina.slug }}" target="_blank">Ver página →</a>{% endif %}
+    </div>
+  </form>
+</div>
+
+<script>
+function actualizarTipo(){
+  var val=document.getElementById('tipo').value;
+  document.getElementById('extraConfirmacion').classList.toggle('on', val==='confirmacion');
+}
+document.getElementById('tipo').addEventListener('change', actualizarTipo);
+actualizarTipo();
+
+function actualizarPreview(){
+  var url=document.getElementById('imagen_url').value.trim();
+  var img=document.getElementById('preview');
+  if(url){ img.src=url; img.style.display='block'; } else { img.style.display='none'; }
+}
+document.getElementById('imagen_url').addEventListener('input', actualizarPreview);
+actualizarPreview();
+</script>
+</body>
+</html>

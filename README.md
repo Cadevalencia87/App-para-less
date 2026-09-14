@@ -71,8 +71,34 @@ y te dejo esa parte también configurada.
   en la pregunta 2), % de probabilidad de recompra (pregunta 6),
   sonrisas detectadas (respuestas positivas a la pregunta 1), y la
   tabla completa con fecha/hora y todas las respuestas.
+- Desde ahí hay un enlace **"Gestionar páginas →"** para crear páginas
+  nuevas sin tocar código (ver siguiente sección).
 
-## 4. Seguridad — qué se hizo y por qué alcanza para este proyecto
+## 3.1 Crear páginas nuevas sin programar
+
+Entra a `/admin/paginas` (o desde el enlace en `/admin`). Ahí puedes:
+
+- Crear una página nueva con título, subtítulo, contenido y una imagen
+  (pegando el link de una imagen ya subida a un sitio como imgur.com —
+  sube tu foto ahí, copia el "link directo" que termina en `.jpg` o
+  `.png`, y pégalo en el campo "Link de una imagen").
+- Elegir el tipo de página:
+  - **Solo informativa**: solo muestra el texto y la imagen.
+  - **Con botones de confirmar / no puedo**: agrega dos botones (los
+    textos son editables, por ejemplo "Sí, ahí estaré" / "No puedo").
+    Cuando alguien hace clic, queda guardada la respuesta con fecha y
+    hora, y se le muestra el mensaje que tú configures.
+- Cada página creada queda disponible en
+  `tudominio.onrender.com/p/lo-que-hayas-puesto-como-slug`
+- Puedes editar o borrar cualquier página desde `/admin/paginas`, en
+  cualquier momento, sin volver a tocar el código ni redesplegar nada.
+
+Las respuestas a los botones de confirmación se guardan en la base de
+datos (tabla `confirmaciones`) — si más adelante quieres verlas
+listadas en el panel de admin igual que las de la encuesta, dímelo y
+se agrega esa vista.
+
+## 4. Panel de administración — seguridad
 
 - El panel `/admin` exige usuario y contraseña (HTTP Basic Auth) antes
   de mostrar cualquier dato. Sin la contraseña correcta, nadie ve las
