@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Encuesta de satisfacción — Operación: Sacar una Sonrisa</title>
+<meta name="description" content="Evaluación de calidad del servicio de entretenimiento espontáneo. Folio SNR-003.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#191C1F;
+  --ink-soft:#5A6068;
+  --ink-faint:#8B9199;
+  --paper:#FFFFFF;
+  --desk:#EDEFF1;
+  --tint:#F5F7F8;
+  --rule:#D9DDE1;
+  --inst:#1B4A72;
+  --inst-soft:#E7EEF5;
+  --ok:#2F7D4F;
+  --alert:#A8342C;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--desk);color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+  font-size:16px;line-height:1.6;
+  padding:28px 16px 64px;
+}
+.sheet{
+  max-width:760px;margin:0 auto;background:var(--paper);
+  border:1px solid var(--rule);border-top:4px solid var(--inst);
+  padding:40px 44px 36px;
+}
+.bar{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
+  flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--rule);
+}
+.org{font-weight:600;font-size:14px;letter-spacing:.01em}
+.org span{display:block;font-weight:400;font-size:13px;color:var(--ink-soft)}
+.folio{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft);text-align:right;line-height:1.7}
+h1{
+  font-size:29px;line-height:1.22;font-weight:600;margin:26px 0 10px;
+  letter-spacing:-.015em;max-width:20ch;
+}
+.sub{font-size:16px;color:var(--ink-soft);margin:0 0 24px;max-width:62ch}
+.preamble{
+  background:var(--tint);border-left:3px solid var(--inst);
+  padding:16px 18px;font-size:14.5px;color:var(--ink-soft);margin:0 0 8px;
+}
+.preamble p{margin:0 0 10px}
+.preamble p:last-child{margin:0}
+fieldset{border:0;padding:24px 0;margin:0;border-top:1px solid var(--rule)}
+legend{padding:0;font-weight:500;font-size:17px;line-height:1.45;display:block;width:100%}
+.n{font-family:"IBM Plex Mono",monospace;color:var(--inst);font-size:14px;margin-right:10px}
+.hint{font-size:13.5px;color:var(--ink-faint);margin:6px 0 0}
+.opts{margin-top:12px;display:grid;gap:2px}
+.opt{display:flex;gap:11px;align-items:flex-start;padding:7px 9px;margin-left:-9px;border-radius:3px;cursor:pointer;font-size:15.5px}
+.opt:hover{background:var(--tint)}
+input[type=radio],input[type=checkbox]{margin:5px 0 0;accent-color:var(--inst);width:16px;height:16px;flex:none}
+.scale{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+.scale input{position:absolute;opacity:0;width:0;height:0}
+.scale label{
+  flex:1;min-width:48px;text-align:center;border:1px solid var(--rule);
+  padding:11px 4px;cursor:pointer;font-family:"IBM Plex Mono",monospace;font-size:15px;
+  background:var(--paper);
+}
+.scale label:hover{background:var(--tint)}
+.scale input:checked+span{}
+.scale label.on{background:var(--inst);border-color:var(--inst);color:#fff}
+.scale input:focus-visible+label,.scale label:focus-within{outline:2px solid var(--inst);outline-offset:2px}
+.ends{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-faint);margin-top:7px}
+textarea,input[type=text]{
+  width:100%;font-family:inherit;font-size:15px;color:var(--ink);
+  border:1px solid var(--rule);padding:11px 12px;background:var(--paper);margin-top:12px;
+}
+textarea{resize:vertical;min-height:92px;line-height:1.6}
+input[type=text].inline{width:auto;flex:1;min-width:140px;margin:0;padding:4px 8px;font-size:14px}
+:focus-visible{outline:2px solid var(--inst);outline-offset:2px}
+.status{border-top:1px solid var(--rule);padding-top:22px;margin-top:4px}
+.status h2{font-size:15px;font-weight:600;margin:0 0 12px}
+.status ul{list-style:none;margin:0;padding:0;font-size:15px;color:var(--ink-soft)}
+.status li{padding:5px 0;display:flex;gap:10px;align-items:center}
+.box{font-family:"IBM Plex Mono",monospace;color:var(--ok)}
+.box.pend{color:var(--ink-faint)}
+.actions{margin-top:28px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+button{
+  font-family:inherit;font-size:15px;font-weight:500;padding:13px 24px;cursor:pointer;
+  background:var(--inst);color:#fff;border:1px solid var(--inst);
+}
+button:hover{background:#15395a}
+button.ghost{background:var(--paper);color:var(--inst)}
+button.ghost:hover{background:var(--inst-soft)}
+.err{color:var(--alert);font-size:14px}
+#recibo{display:none;margin-top:26px;border:1px solid var(--ok);background:#F1F8F3;padding:20px 22px}
+#recibo h2{margin:0 0 10px;font-size:17px;font-weight:600;color:#235C3B}
+#recibo p{margin:0 0 12px;font-size:15px;color:#2E4A3A}
+#recibo .meta{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:#4B6B58;line-height:1.8;margin:0}
+.fine{font-size:12.5px;color:var(--ink-faint);border-top:1px solid var(--rule);margin-top:30px;padding-top:14px;line-height:1.7}
+@media (max-width:620px){
+  body{padding:0 0 40px}
+  .sheet{padding:28px 20px 30px;border-left:0;border-right:0}
+  h1{font-size:24px}
+  .folio{text-align:left}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="sheet">
+
+  <div class="bar">
+    <div class="org">Departamento de Entretenimiento Espontáneo
+      <span>Subdirección de Control de Calidad</span>
+    </div>
+    <div class="folio">Folio SNR-003<br>Formato EV-01 / rev. 4<br>Ejercicio vigente</div>
+  </div>
+
+  <h1>Encuesta de satisfacción — Operación: Sacar una Sonrisa</h1>
+  <p class="sub">Su opinión es fundamental para evaluar el desempeño de nuestro departamento de entretenimiento espontáneo.</p>
+
+  <div class="preamble">
+    <p>Estimada usuaria: derivado de la reciente prestación del servicio consistente en el envío de material audiovisual de entretenimiento (tres reels, en adelante «los contenidos»), y habiéndose registrado en bitácora la confirmación verbal de una (1) sonrisa, se solicita atentamente evaluar su experiencia.</p>
+    <p>Se precisa que el objetivo único del servicio era conseguir al menos una sonrisa. Cualquier carcajada adicional se considera excedente no contemplado en el contrato y no genera obligación alguna para el proveedor.</p>
+    <p>Tiempo estimado de llenado: 47 segundos. Sus respuestas serán tratadas con la seriedad que el caso amerita.</p>
+  </div>
+
+  <form id="f" novalidate>
+
+    <fieldset>
+      <legend><span class="n">01</span>¿El servicio contratado logró cumplir con su objetivo principal?</legend>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="q1" value="Sí, logró sacarme una sonrisa"><span>Sí, logró sacarme una sonrisa.</span></label>
+        <label class="opt"><input type="radio" name="q1" value="Sí, aunque de manera moderada"><span>Sí, aunque de manera moderada.</span></label>
+        <label class="opt"><input type="radio" name="q1" value="No, pero se reconoce el esfuerzo"><span>No, pero se reconoce el esfuerzo.</span></label>
+        <label class="opt"><input type="radio" name="q1" value="No. Solicito compensación inmediata"><span>No. Solicito una compensación inmediata.</span></label>
+        <label class="opt"><input type="radio" name="q1" value="Prefiero no declarar"><span>Prefiero no declarar.</span></label>
+      </div>
+      <p class="err" id="e1"></p>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="n">02</span>¿Cómo calificaría la calidad general de los reels recibidos?</legend>
+      <p class="hint">Indicador de desempeño del contenido.</p>
+      <div class="scale" data-scale="q2" data-min="1" data-max="5"></div>
+      <div class="ends"><span>1 · Deficiente</span><span>5 · Excelencia operativa</span></div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="n">03</span>¿Cuál fue el nivel de efectividad del contenido para mejorar su estado de ánimo?</legend>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="q3" value="Nulo"><span>Nulo</span></label>
+        <label class="opt"><input type="radio" name="q3" value="Bajo"><span>Bajo</span></label>
+        <label class="opt"><input type="radio" name="q3" value="Moderado"><span>Moderado</span></label>
+        <label class="opt"><input type="radio" name="q3" value="Alto"><span>Alto</span></label>
+        <label class="opt"><input type="radio" name="q3" value="Sorprendentemente efectivo"><span>Sorprendentemente efectivo</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="n">04</span>¿Cuál de los contenidos proporcionados tuvo mayor impacto?</legend>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="q4" value="Reel 1"><span>Reel 1</span></label>
+        <label class="opt"><input type="radio" name="q4" value="Reel 2"><span>Reel 2</span></label>
+        <label class="opt"><input type="radio" name="q4" value="Reel 3"><span>Reel 3</span></label>
+        <label class="opt"><input type="radio" name="q4" value="Los tres cumplieron satisfactoriamente"><span>Los tres cumplieron satisfactoriamente</span></label>
+        <label class="opt"><input type="radio" name="q4" value="No recuerdo, pero sí me reí"><span>No recuerdo, pero sí me reí</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="n">05</span>¿Considera que el proveedor cumplió con el compromiso de «sacarle aunque sea una sonrisa»?</legend>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="q5" value="Compromiso cumplido"><span>Sí, compromiso cumplido.</span></label>
+        <label class="opt"><input type="radio" name="q5" value="Cumplimiento parcial"><span>Cumplimiento parcial.</span></label>
+        <label class="opt"><input type="radio" name="q5" value="Se requiere segunda ronda de evaluación"><span>Se requiere una segunda ronda de evaluación.</span></label>
+        <label class="opt"><input type="radio" name="q5" value="No, pero puede volver a intentarlo"><span>No, pero puede volver a intentarlo.</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="n">06</span>¿Qué tan probable es que vuelva a utilizar el servicio de entretenimiento espontáneo?</legend>
+      <p class="hint">Métrica de recompra. Uso interno del comité.</p>
+      <div class="scale" data-scale="q6" data-min="0" data-max="10"></div>
+      <div class="ends"><span>0 · Nada probable</span><span>10 · Mándalos ya</span></div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="n">07</span>¿Qué tipo de contenido debería incluirse en futuras entregas?</legend>
+      <p class="hint">Puede seleccionar más de una opción.</p>
+      <div class="opts">
+        <label class="opt"><input type="checkbox" name="q7" value="Memes"><span>Memes</span></label>
+        <label class="opt"><input type="checkbox" name="q7" value="Reels absurdos"><span>Reels absurdos</span></label>
+        <label class="opt"><input type="checkbox" name="q7" value="Caifanes"><span>Caifanes</span></label>
+        <label class="opt"><input type="checkbox" name="q7" value="Videos de animales"><span>Videos de animales</span></label>
+        <label class="opt"><input type="checkbox" name="q7" value="Contenido específico para hacerme reír"><span>Contenido específico para hacerme reír</span></label>
+        <label class="opt" style="align-items:center"><input type="checkbox" name="q7" value="Otro"><span>Otro:</span><input type="text" class="inline" id="q7otro" placeholder="Especifique"></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="n">08</span>Describa brevemente su experiencia como beneficiaria del programa.</legend>
+      <p class="hint">Se permite el uso de mayúsculas enfáticas.</p>
+      <textarea name="q8" placeholder="Escriba aquí"></textarea>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="n">09</span>¿Considera que el responsable del servicio merece algún tipo de reconocimiento?</legend>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="q9" value="Sí"><span>Sí</span></label>
+        <label class="opt"><input type="radio" name="q9" value="Definitivamente sí"><span>Definitivamente sí</span></label>
+        <label class="opt"><input type="radio" name="q9" value="Se analizará en la próxima junta directiva"><span>Se analizará en la próxima junta directiva</span></label>
+        <label class="opt"><input type="radio" name="q9" value="No estoy autorizada para responder"><span>No estoy autorizada para responder</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend><span class="n">10</span>Comentarios adicionales, quejas, felicitaciones o amenazas legales.</legend>
+      <p class="hint">Campo monitoreado por el área jurídica imaginaria.</p>
+      <textarea name="q10" placeholder="Escriba aquí"></textarea>
+    </fieldset>
+
+    <section class="status">
+      <h2>Estado actual del servicio</h2>
+      <ul>
+        <li><span class="box">[x]</span> Solicitud recibida</li>
+        <li><span class="box">[x]</span> Contenido entregado</li>
+        <li><span class="box">[x]</span> Sonrisa detectada</li>
+        <li><span class="box">[x]</span> Objetivo cumplido</li>
+        <li id="pend"><span class="box pend">[ ]</span> Encuesta de satisfacción pendiente</li>
+      </ul>
+    </section>
+
+    <div class="actions">
+      <button type="submit">Enviar evaluación</button>
+    </div>
+  </form>
+
+  <div id="recibo">
+    <h2>Evaluación recibida correctamente</h2>
+    <p>Su información ha sido remitida al Comité Imaginario de Calidad para su correspondiente análisis y procesamiento.</p>
+    <p class="meta">
+      Folio: SNR-003<br>
+      Registrada el: <span id="fechaHora">—</span><br>
+      Estado: almacenada en base de datos<br>
+      Próxima entrega programada: sin previo aviso
+    </p>
+  </div>
+
+  <p class="fine">Documento sin validez oficial. Los indicadores de desempeño aquí referidos son de carácter simbólico. El proveedor se reserva el derecho de reincidir.</p>
+</main>
+
+<script>
+document.querySelectorAll('.scale').forEach(function(box){
+  var name=box.dataset.scale,min=+box.dataset.min,max=+box.dataset.max;
+  for(var i=min;i<=max;i++){
+    var id=name+'_'+i;
+    var inp=document.createElement('input');
+    inp.type='radio';inp.name=name;inp.value=i;inp.id=id;
+    var lab=document.createElement('label');
+    lab.setAttribute('for',id);lab.textContent=i;
+    box.appendChild(inp);box.appendChild(lab);
+  }
+  box.addEventListener('change',function(){
+    box.querySelectorAll('label').forEach(function(l){
+      var t=document.getElementById(l.getAttribute('for'));
+      l.classList.toggle('on',t.checked);
+    });
+  });
+});
+
+function leer(){
+  var f=document.getElementById('f'),d=new FormData(f),o={};
+  ['q1','q2','q3','q4','q5','q6','q8','q9','q10'].forEach(function(k){o[k]=d.get(k)||'—';});
+  var m=d.getAll('q7'),extra=document.getElementById('q7otro').value.trim();
+  if(extra&&m.indexOf('Otro')>-1){m[m.indexOf('Otro')]='Otro: '+extra;}
+  o.q7=m.length?m.join(', '):'—';
+  return o;
+}
+function texto(){
+  var o=leer();
+  return 'ENCUESTA DE SATISFACCIÓN — OPERACIÓN: SACAR UNA SONRISA (folio SNR-003)\n\n'+
+  '01 Objetivo cumplido: '+o.q1+'\n'+
+  '02 Calidad de los reels: '+o.q2+'/5\n'+
+  '03 Efectividad anímica: '+o.q3+'\n'+
+  '04 Mayor impacto: '+o.q4+'\n'+
+  '05 Compromiso: '+o.q5+'\n'+
+  '06 Probabilidad de recompra: '+o.q6+'/10\n'+
+  '07 Contenido sugerido: '+o.q7+'\n'+
+  '08 Experiencia: '+o.q8+'\n'+
+  '09 Reconocimiento al responsable: '+o.q9+'\n'+
+  '10 Comentarios: '+o.q10;
+}
+
+document.getElementById('f').addEventListener('submit',function(ev){
+  ev.preventDefault();
+  var e1=document.getElementById('e1');
+  if(!document.querySelector('input[name=q1]:checked')){
+    e1.textContent='Responda la pregunta 01 para continuar.';
+    document.querySelector('input[name=q1]').focus();
+    return;
+  }
+  e1.textContent='';
+
+  var boton=ev.target.querySelector('button[type=submit]');
+  boton.disabled=true;
+  var textoOriginal=boton.textContent;
+  boton.textContent='Enviando...';
+
+  fetch('/api/enviar',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(leer())
+  })
+  .then(function(res){return res.json().then(function(data){return {ok:res.ok,data:data};});})
+  .then(function(r){
+    boton.disabled=false;
+    boton.textContent=textoOriginal;
+    if(!r.ok||!r.data.ok){
+      e1.textContent=(r.data&&r.data.error)||'No se pudo enviar. Intente de nuevo.';
+      return;
+    }
+    document.getElementById('fechaHora').textContent=r.data.fecha_hora;
+    document.getElementById('pend').innerHTML='<span class="box">[x]</span> Encuesta de satisfacción completada';
+    var rec=document.getElementById('recibo');
+    rec.style.display='block';
+    rec.scrollIntoView({behavior:'smooth',block:'center'});
+  })
+  .catch(function(){
+    boton.disabled=false;
+    boton.textContent=textoOriginal;
+    e1.textContent='No se pudo conectar con el servidor. Verifique su conexión e intente de nuevo.';
+  });
+});
+
+</script>
+</body>
+</html>

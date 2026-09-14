@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Panel — Operación: Sacar una Sonrisa</title>
+<style>
+:root{
+  --ink:#191C1F;--ink-soft:#5A6068;--paper:#FFFFFF;--desk:#EDEFF1;
+  --rule:#D9DDE1;--inst:#1B4A72;--tint:#F5F7F8;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--desk);color:var(--ink);font-family:system-ui,sans-serif;padding:28px 16px 60px}
+.wrap{max-width:960px;margin:0 auto}
+h1{font-size:22px;margin:0 0 4px}
+p.sub{color:var(--ink-soft);margin:0 0 24px;font-size:14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:28px}
+.card{background:var(--paper);border:1px solid var(--rule);border-top:3px solid var(--inst);padding:16px 18px}
+.card .num{font-size:26px;font-weight:600}
+.card .lbl{font-size:13px;color:var(--ink-soft);margin-top:4px}
+table{width:100%;border-collapse:collapse;background:var(--paper);font-size:13px}
+th,td{border:1px solid var(--rule);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--tint);font-weight:600;white-space:nowrap}
+td{max-width:220px}
+.tablewrap{overflow-x:auto;border:1px solid var(--rule)}
+.empty{color:var(--ink-soft);padding:20px;text-align:center;background:var(--paper);border:1px solid var(--rule)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Operación: Sacar una Sonrisa — Panel de administración</h1>
+  <p class="sub">Comité Imaginario de Calidad · Uso interno</p>
+
+  <div class="cards">
+    <div class="card"><div class="num">{{ stats.total }}</div><div class="lbl">Evaluaciones recibidas</div></div>
+    <div class="card"><div class="num">{{ stats.calidad_pct }}%</div><div class="lbl">Satisfacción promedio (calidad)</div></div>
+    <div class="card"><div class="num">{{ stats.recompra_pct }}%</div><div class="lbl">Índice de recompra</div></div>
+    <div class="card"><div class="num">{{ stats.sonrisas }}</div><div class="lbl">Sonrisas detectadas</div></div>
+  </div>
+
+  {% if filas|length == 0 %}
+  <div class="empty">Todavía no hay respuestas registradas.</div>
+  {% else %}
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Fecha/hora</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Q5</th>
+          <th>Q6</th><th>Q7</th><th>Q8</th><th>Q9</th><th>Q10</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in filas %}
+        <tr>
+          <td>{{ f.fecha_hora }}</td>
+          <td>{{ f.q1 }}</td>
+          <td>{{ f.q2 }}</td>
+          <td>{{ f.q3 }}</td>
+          <td>{{ f.q4 }}</td>
+          <td>{{ f.q5 }}</td>
+          <td>{{ f.q6 }}</td>
+          <td>{{ f.q7 }}</td>
+          <td>{{ f.q8 }}</td>
+          <td>{{ f.q9 }}</td>
+          <td>{{ f.q10 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+</body>
+</html>
